@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Product {
+  id    Int     @id @default(autoincrement())
+  code  Int
+  name  String
+  price Float
+  state Boolean @default(true)
+
+  saleItems SaleItem[]
+
+  @@index([id], map: "idx_products_state")
+  @@index([code], map: "idx_products_code")
+  @@map("products")
+}
+
+model Sale {
+  id    Int      @id @default(autoincrement())
+  date  DateTime @default(now())
+  total Float
+
+  saleItems  SaleItem[]
+  saleReport SaleReport?
+
+  @@map("sales")
+}
+
+model SaleItem {
+  id          Int   @id @default(autoincrement())
+  saleId      Int   @map("sale_id")
+  productId   Int   @map("product_id")
+  quantity    Int
+  priceAtSale Float @map("price_at_sale")
+
+  sale    Sale    @relation(fields: [saleId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+
+  @@unique([saleId, productId], map: "idx_sale_product")
+  @@map("sales_items")
+}
+
+model User {
+  id       String @id @default(uuid())
+  username String @unique
+  password String
+
+  @@map("users")
+}
+
+model SaleReport {
+  id         Int      @id @default(autoincrement())
+  saleId     Int      @unique @map("sale_id")
+  reason     String
+  reportedAt DateTime @default(now()) @map("reported_at")
+
+  sale Sale @relation(fields: [saleId], references: [id])
+
+  @@map("sale_reports")
+}
