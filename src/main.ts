@@ -14,6 +14,8 @@ async function bootstrap() {
   const corsOrigin = process.env.CORS_ORIGIN;
   app.enableCors({
     origin: corsOrigin ? corsOrigin.split(',') : true,
+    methods: ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   });
   app.useGlobalPipes(
     new ValidationPipe({
