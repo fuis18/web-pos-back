@@ -9,7 +9,7 @@ export class PrismaService
   implements OnModuleInit, OnModuleDestroy
 {
   constructor() {
-    const databaseUrl = process.env['DATABASE_URL'];
+    const databaseUrl = process.env.DATABASE_URL;
 
     if (typeof databaseUrl !== 'string' || databaseUrl.length === 0) {
       throw new Error('DATABASE_URL is required to initialize PrismaClient');
