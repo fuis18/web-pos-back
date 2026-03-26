@@ -44,8 +44,8 @@ pnpm i class-validator class-transformer
 Crear un archivo **.env**
 
 ```env
-DATABASE_URL="postgresql://fuis18:mypass@192.168.0.12:5432/project?schema=public"
-POSTGRES_USER=fuis18
+DATABASE_URL="postgresql://user:mypass@192.168.0.12:5432/project?schema=public"
+POSTGRES_USER=user
 POSTGRES_PASSWORD=mypass
 POSTGRES_DB=project
 ```
