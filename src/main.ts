@@ -11,7 +11,10 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter(),
   );
-  app.enableCors();
+  const corsOrigin = process.env.CORS_ORIGIN;
+  app.enableCors({
+    origin: corsOrigin ? corsOrigin.split(',') : true,
+  });
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
