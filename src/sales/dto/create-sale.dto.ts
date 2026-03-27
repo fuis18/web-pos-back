@@ -11,7 +11,7 @@ import {
 export class CreateSaleItemDto {
   @IsInt()
   @Min(1)
-  product_id: number;
+  productId: number;
 
   @IsInt()
   @Min(1)
