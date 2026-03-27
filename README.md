@@ -3,6 +3,7 @@
 No tengo tanta experiencia en el backend, como en el frontend
 Pero ya me había formado un stack, que es este
 Utilizo el patron de diseño MVC y fastify para la velocidad
+Aún me falta aplicar varias funcionalidades, así que tengo muchas ganaas de mover las manitas ><
 
 |                 | URL                                                                                  |
 | --------------- | ------------------------------------------------------------------------------------ |
