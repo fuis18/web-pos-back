@@ -32,6 +32,13 @@ export class PrismaExceptionFilter implements ExceptionFilter {
 
     // Errores conocidos (unique constraint, not found, etc.)
     if (exception instanceof Prisma.PrismaClientKnownRequestError) {
+      if (exception.code === 'P1001') {
+        this.logger.error('Database unreachable (P1001)', exception.meta);
+        return reply.status(HttpStatus.SERVICE_UNAVAILABLE).send({
+          statusCode: 503,
+          message: 'Database temporarily unavailable',
+        });
+      }
       if (exception.code === 'P2002') {
         return reply.status(HttpStatus.CONFLICT).send({
           statusCode: 409,
