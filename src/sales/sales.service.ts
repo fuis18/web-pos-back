@@ -95,7 +95,7 @@ export class SalesService {
         total: dto.total,
         saleItems: {
           create: dto.items.map((item) => ({
-            productId: item.product_id,
+            productId: item.productId,
             quantity: item.quantity,
             priceAtSale: item.price,
           })),
