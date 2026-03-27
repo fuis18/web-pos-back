@@ -1,8 +1,14 @@
 ## Project setup
 
-```bash
-$ pnpm install
-```
+No tengo tanta experiencia en el backend, como en el frontend
+Pero ya me había formado un stack, que es este
+Utilizo el patron de diseño MVC y fastify para la velocidad
+
+|                 | URL                                                                                  |
+| --------------- | ------------------------------------------------------------------------------------ |
+| 🌐 Frontend      | [web-pos-frontend](http://web-pos-frontend-9h2hs3-b67272-144-225-147-25.traefik.me/) |
+| ⚙️ Backend       | [web-pos-backend](http://web-pos-backend-vxrrd4-1172b8-144-225-147-25.traefik.me/)   |
+| 📦 Repo Frontend | [github.com/fuis18/web-pos-back](https://github.com/fuis18/web-pos-front)            |
 
 ## Compile and run the project
 
@@ -29,17 +35,28 @@ $ pnpm run test:e2e
 # test coverage
 $ pnpm run test:cov
 ```
-## For BD
+## Setup local
 
 ```sh
+# Generate
+nest new web-pos-back
+cd ./web-pos-back
+
+# Use fastify
+pnpm i fastify @nestjs/platform-fastify
+pnpm rm -D @types/express
+pnpm rm @nestjs/platform-express
+
+# install base
+pnpm i
+pnpm i class-validator class-transformer
+
+# ORM for DB
 pnpm i prisma -D
 pnpx prisma init
+pnpm prisma:generate
 ```
-## Decoradores
 
-```sh
-pnpm i class-validator class-transformer
-```
 
 Crear un archivo **.env**
 
@@ -108,33 +125,12 @@ npm run start
 ```
 
 Crear un recurso
-/profile
+/products
 
 ```sh
-nest g resource profile --no-spec
+nest g resource products --no-spec
 ✔ What transport layer do you use? REST API
 ✔ Would you like to generate CRUD entry points? Yes
-```
-
-Creando los demás módulos
-/resume
-
-```sh
-nest g res resume --no-spec
-✔ What transport layer do you use? REST API
-✔ Would you like to generate CRUD entry points? Yes
-```
-
-```sh
-nest g res activity --no-spec
-nest g res softskill --no-spec
-nest g res education --no-spec
-nest g res experience --no-spec
-nest g res language --no-spec
-nest g res skill --no-spec
-nest g res project --no-spec
-nest g res blog --no-spec
-nest g res message --no-spec
 ```
 
 Detectar archivos
