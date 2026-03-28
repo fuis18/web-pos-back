@@ -15,6 +15,7 @@ import {
 import { ProductsService } from './products.service.js';
 import { CreateProductDto } from './dto/create-product.dto.js';
 import { UpdateProductDto } from './dto/update-product.dto.js';
+import { ImportProductsDto } from './dto/import-products.dto.js';
 
 @Controller('products')
 export class ProductsController {
@@ -23,6 +24,11 @@ export class ProductsController {
   @Post()
   create(@Body() dto: CreateProductDto) {
     return this.productsService.create(dto);
+  }
+
+  @Post('import')
+  importProducts(@Body() dto: ImportProductsDto) {
+    return this.productsService.importProducts(dto.rows);
   }
 
   @Get()

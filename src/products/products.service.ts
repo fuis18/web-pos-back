@@ -7,10 +7,67 @@ import type {
   ProductListItem,
   BatchPayload,
 } from './entities/product.entity.js';
+import { ImportRowDto } from './dto/import-products.dto.js';
+
+export interface ImportSummary {
+  imported: number;
+  updated: number;
+  skipped: number;
+}
 
 @Injectable()
 export class ProductsService {
   constructor(private readonly prisma: PrismaService) {}
+
+  // ─── Import ────────────────────────────────────────────────────────────────
+  async importProducts(rows: ImportRowDto[]): Promise<ImportSummary> {
+    // One query to fetch all potentially matching products
+    const codes = rows.map((r) => r.code);
+    const existing = await this.prisma.product.findMany({
+      where: { code: { in: codes } },
+      select: { id: true, code: true, name: true, price: true },
+    });
+
+    const byCode = new Map(existing.map((p) => [p.code, p]));
+
+    const toCreate: ImportRowDto[] = [];
+    const toUpdate: Array<{ id: number; name?: string; price?: number }> = [];
+    let skipped = 0;
+
+    for (const row of rows) {
+      const found = byCode.get(row.code);
+
+      if (!found) {
+        toCreate.push(row);
+        continue;
+      }
+
+      const sameName = found.name === row.name;
+      const samePrice = Number(found.price) === row.price;
+
+      if (sameName && samePrice) {
+        skipped++;
+        continue;
+      }
+
+      toUpdate.push({
+        id: found.id,
+        ...(!sameName && { name: row.name }),
+        ...(!samePrice && { price: row.price }),
+      });
+    }
+
+    await this.prisma.$transaction([
+      ...toCreate.map((r) => this.prisma.product.create({ data: r })),
+      ...toUpdate.map(({ id, ...data }) =>
+        this.prisma.product.update({ where: { id }, data }),
+      ),
+    ]);
+
+    return { imported: toCreate.length, updated: toUpdate.length, skipped };
+  }
+
+  // ─── CRUD ──────────────────────────────────────────────────────────────────
 
   async create(dto: CreateProductDto): Promise<Product> {
     return (await this.prisma.product.create({ data: dto })) as Product;
